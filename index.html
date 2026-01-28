@@ -1,0 +1,78 @@
+	<!DOCTYPE html>
+	<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <title>『宇都宮城本丸将軍家御泊城ノ節建物ノ図』解析サイト - 全体図</title>
+	    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+	    <style>
+	        #map { height: 100vh; width: 100%; background: #f0f0f0; }
+	        .instruction { position: absolute; top: 10px; left: 50px; z-index: 1000; background: white; padding: 10px; border-radius: 5px; pointer-events: none; }
+   .warning-note {				
+        position: absolute;				
+        bottom: 525px;				
+        left: 900px;				
+        z-index: 1000;				
+        background: rgba(255, 255, 255, 0.9);				
+        padding: 10px;				
+        border-radius: 5px;				
+        border: 2px solid orange;				
+        font-size: 14px;				
+        max-width: 300px;				
+    }				
+
+	    </style>
+	</head>
+	<body>
+	
+	<div class="instruction">見たい場所をタップしてください</div>
+	<div id="map"></div>
+	<div class="warning-note">												
+    <b>【注意】</b><br>												
+    異なる色の枠が重なっている場所をタップすると、意図しない場所が開くことがあります。枠が重なっていない場所をタップしてください。												
+</div>												
+
+	<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+	<script>
+	    const map = L.map('map', { crs: L.CRS.Simple, minZoom: -2 });
+	    const bounds = [[0, 0], [1000, 1000]];
+	    // 全体の画像を表示
+	    L.imageOverlay('zenntai.jpg', bounds).addTo(map);
+	    map.fitBounds(bounds);
+            //
+            map.setMaxBounds(bounds);
+	
+	    // 分割したエリア（例：御成門エリア）の設定
+	    // [ [縦1, 横1], [縦2, 横2] ] で四角い範囲を指定します
+	    const area1 = L.rectangle([[45, 450], [312,814]], {color: "blue", weight: 1, fillOpacity: 0.1}).addTo(map);
+	    
+	    // クリックしたら詳細ページ（detail.html）に飛ぶ
+	    area1.on('click', function() {
+	        window.location.href = 'detail.html'; 
+	    });
+   
+            const area2 = L.rectangle([[304, 496], [584, 828]], {color: "green", weight: 1, fillOpacity: 0.1}).addTo(map);						
+    area2.on('click', function() {						
+        window.location.href = 'detail.green.html'; // 御成御殿専用のページへ				
+    });	
+            const area3 = L.rectangle([[116, 178], [445, 620]], {color: "red", weight: 1, fillOpacity: 0.1}).addTo(map);						
+    area3.on('click', function() {						
+        window.location.href = 'detail.red.html';		
+    });						
+            const area4 = L.rectangle([[496, 252], [552, 400]], {color: "yellow", weight: 1, fillOpacity: 0.1}).addTo(map);						
+    area4.on('click', function() {						
+        window.location.href = 'detail.yellow.html';		
+    });						
+
+	
+// --- 座標調査用コード（ここから） ---				
+map.on('click', function(e) {				
+    const lat = Math.round(e.latlng.lat);				
+    const lng = Math.round(e.latlng.lng);				
+    alert("この場所の座標は [" + lat + ", " + lng + "] です");				
+    console.log("[" + lat + ", " + lng + "]");				
+});				
+// --- 座標調査用コード（ここまで） ---				
+
+        </script>
+	</body>
+	</html>
