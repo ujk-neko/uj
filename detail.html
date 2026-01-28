@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>詳細・解読モード</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map { height: 100vh; width: 100%; background: #f0f0f0; }
+        .controls { position: absolute; top: 10px; right: 10px; z-index: 1000; background: white; padding: 10px; border-radius: 5px; display: flex; flex-direction: column; gap: 5px; }
+        .back-btn { position: absolute; top: 10px; left: 10px; z-index: 1000; background: #333; color: white; padding: 10px; text-decoration: none; border-radius: 5px; }
+        .map-label { font-weight: bold; font-size: 24px; white-space: nowrap; }
+    #info-panel {				
+        position: absolute;				
+        bottom: 20px;				
+        right: 10px;				
+        z-index: 1000;				
+        background: white;				
+        padding: 15px;				
+        border-radius: 8px;				
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);				
+        width: 250px;				
+        display: none; /* 最初は隠しておく */				
+
+ </style>
+</head>
+<body>
+
+<a href="index.html" class="back-btn">← 全体に戻る</a>
+
+<div class="controls">
+    <button onclick="changeMode(1)">1. 元の地図（拡大版）</button>
+    <button onclick="changeMode(2)">2. 解読地図（拡大版）</button>
+    <button onclick="changeMode(3)">3. 解析結果と説明（字の向き統一）</button>
+</div>
+<div id="map"></div>
+
+<div id="info-panel">							
+    <div class="panel-title">💡 解読の豆知識</div>							
+    <p style="margin: 0; font-size: 14px;">							
+        部屋名などに「御（おん・ご）」がついていることが多くあります。これは接頭辞（丁寧にする言葉）がついたもので、当時の敬意を表しています。							
+    </p>							
+</div>							
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    const map = L.map('map', { crs: L.CRS.Simple, minZoom: -1 });
+    const bounds = [[0, 0], [1000, 1000]];
+
+    // ① 元の地図【拡大版】
+    const layerOriginal = L.imageOverlay('igamonn.big.jpg', bounds);
+    // ② 解読地図【拡大版】
+    const layerKaidoku = L.imageOverlay('igamonn.ni.jpg', bounds);
+
+    // 最初は「元の地図」を表示
+    layerOriginal.addTo(map);
+    map.fitBounds(bounds);
+    //
+    map.setMaxBounds(bounds);
+    // ③ 説明用の文字データ
+    const annotations = [
+        { text: "八間一尺", latlng: [372,332], rotation:0 , size:10,vertical:true,desc: "8間1尺=約1.818ｍ" },
+ 　　　 { text: "石垣高弐間", latlng: [448,220], rotation:0 , size:10,vertical:true,desc: "石垣の高さが2間（=約3.636m）" },
+        { text: "二間", latlng: [312,275], rotation:0 , size:10,vertical:false,desc: "2間=約3.636m(辰巳櫓の広さを表している。)" },
+        { text: "六間", latlng: [331,275], rotation:0 , size:10,vertical:false,desc: "6間=約10.908m" },
+        { text: "櫓二間", latlng: [258,830], rotation:0 , size:10,vertical:true,desc: "2間=3.636m（辰巳櫓の広さを表している。）" },
+        { text: "辰見櫓", latlng: [176,770], rotation:0 , size:15,vertical:true,desc: "辰巳櫓　辰巳は方角の名前。辰と巳との間→南東" },
+        { text: "？七尺五寸廻", latlng: [880,300], rotation:0 , size:8,vertical:false,desc: "説明" },
+        { text: "？八尺五寸廻", latlng:[836,300], rotation:0 , size:8,vertical:false,desc: "説明" },
+        { text: "？七尺廻", latlng: [816,300], rotation:0 , size:8,vertical:false,desc: "説明" },
+        { text: "？九尺廻", latlng: [780,300], rotation:0 , size:8,vertical:false,desc: "説明" },
+        { text: "？五尺五寸廻", latlng: [755,300], rotation:0 , size:10,vertical:false,desc: "説明" },
+        { text: "赤丸４の縦？", latlng: [744,358], rotation:0 , size:10,vertical:true,desc: "説明" },
+　　　　{ text: "モチノ木", latlng: [716,270], rotation:0 , size:10,vertical:false,desc: "【黐の木】モチノキ科の常緑高木。葉は楕円形。初夏に葉腋に黄緑色の小花をつける。秋、球形の液果が赤く熟す。樹皮からは鳥黐をとる。"},
+        { text: "櫓ヨリ折？？", latlng: [608,820], rotation:0 , size:15,vertical:true,desc: "説明" },
+        { text: "二間", latlng: [203,757], rotation:0 , size:9,vertical:false,desc: "2間=約3.636m" },
+        { text: "伊賀門", latlng: [117,286], rotation:0 , size:15,vertical:true,desc: "櫓門（城門の上に平櫓が載った建築様式）になっている。城門部分の両側が石垣になっていて、土塁上の土塀とつながっている。土塀からは、門に来た敵に対して横矢をいることが出来る構造となっている。" },
+        { text: "七間", latlng: [486,274], rotation:0 , size:10,vertical:false,desc: "7間=約12.726m" },
+        { text: "御縁側", latlng: [784,58], rotation:0 , size:13,vertical:false,desc: "家の座敷の外側に設けた，細長い板敷きの部分。えん。"}, 
+        { text: "御床", latlng: [900,24], rotation:0 , size:12,vertical:true,desc: "縦書き"},
+        { text: "御上段", latlng: [863,88], rotation:0 , size:12,vertical:false,desc: "説明" },
+        { text: "御次間", latlng: [865,170], rotation:0 , size:12,vertical:false,desc: "【御次の間】主な座敷の隣についている小部屋。" },
+        { text: "御廊下", latlng: [938,156], rotation:0 , size:13,vertical:false,desc: "家の中の部屋をつなぐ細長い通路。" },
+        { text: "御納戸", latlng: [930,64], rotation:0 , size:13,vertical:false,desc: "説明" }//[下→上,左→右]
+
+    ];
+
+    const markers = L.layerGroup(); // 文字をまとめて管理するグループ
+
+    annotations.forEach(data => {
+    // 縦書きか横書きかを判定する命令									
+    const writingMode = data.vertical ? 'vertical-rl' : 'horizontal-tb';									
+    									
+    const myIcon = L.divIcon({								
+        className: 'map-label',									
+        html: `<div style="									
+            transform: rotate(${data.rotation}deg); 									
+            font-size: ${data.size || 24}px; 									
+            writing-mode: ${writingMode};									
+            color: red;">${data.text}</div>`									
+    });									
+    									
+    const marker = L.marker(data.latlng, { icon: myIcon });									
+    marker.bindPopup(`<b>${data.text}</b><br>${data.desc}`);									
+    markers.addLayer(marker);									
+});									
+
+    // 切り替え機能
+    function changeMode(mode) {
+        // 一旦全部消す
+        map.removeLayer(layerOriginal);
+        map.removeLayer(layerKaidoku);
+        map.removeLayer(markers);
+
+    // 一旦パネルを隠す
+    document.getElementById('info-panel').style.display = 'none';
+
+    if (mode === 1) {
+        layerOriginal.addTo(map);
+    } else if (mode === 2) {
+        layerKaidoku.addTo(map);
+    } else if (mode === 3) {
+        layerOriginal.addTo(map);
+        markers.addTo(map);
+        // 「3」のときだけパネルを表示する
+        document.getElementById('info-panel').style.display = 'block';
+}
+
+        if (mode === 1) {
+            layerOriginal.addTo(map);
+        } else if (mode === 2) {
+            layerKaidoku.addTo(map);
+        } else if (mode === 3) {
+            layerOriginal.addTo(map); // 背景は元の地図
+            markers.addTo(map);      // その上に文字を表示
+        }
+    }
+// --- 座標調査用コード（ここから） ---				
+map.on('click', function(e) {				
+    const lat = Math.round(e.latlng.lat);				
+    const lng = Math.round(e.latlng.lng);				
+    alert("この場所の座標は [" + lat + ", " + lng + "] です");				
+    console.log("[" + lat + ", " + lng + "]");				
+});				
+// --- 座標調査用コード（ここまで） ---				
+
+
+
+</script>
+</body>
+</html>
