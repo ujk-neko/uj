@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>詳細・解読モード</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map { height: 100vh; width: 100%; background: #f0f0f0; }
+        .controls { position: absolute; top: 10px; right: 10px; z-index: 1000; background: white; padding: 10px; border-radius: 5px; display: flex; flex-direction: column; gap: 5px; }
+        .back-btn { position: absolute; top: 10px; left: 10px; z-index: 1000; background: #333; color: white; padding: 10px; text-decoration: none; border-radius: 5px; }
+        .map-label { font-weight: bold; font-size: 24px; white-space: nowrap; }
+    </style>
+</head>
+<body>
+
+<a href="index.html" class="back-btn">← 全体に戻る</a>
+
+<div class="controls">
+    <button onclick="changeMode(1)">1. 元の地図（拡大版）</button>
+    <button onclick="changeMode(2)">2. 解読地図（拡大版）</button>
+    <button onclick="changeMode(3)">3. 説明付き（字の向き調整）</button>
+</div>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    const map = L.map('map', { crs: L.CRS.Simple, minZoom: -1 });
+    const bounds = [[0, 0], [1000, 1000]];
+
+    // ① 元の地図【拡大版】
+    const layerOriginal = L.imageOverlay('okattemukai.big.JPG', bounds);
+    // ② 解読地図【拡大版】
+    const layerKaidoku = L.imageOverlay('okattemukai.ni.png', bounds);
+
+    // 最初は「元の地図」を表示
+    layerOriginal.addTo(map);
+    map.fitBounds(bounds);
+    //
+    map.setMaxBounds(bounds);
+    // ③ 説明用の文字データ
+    const annotations = [
+        { text: "御勝手向〇候古木小屋", latlng: [136,314], rotation:0 , size:12,vertical:false,desc: "説明" },
+        { text: "二間七間", latlng: [834,538], rotation:0 , size:10,vertical:false,desc: "説明" }
+
+            ];//[下→上,左→右]
+
+    const markers = L.layerGroup(); // 文字をまとめて管理するグループ
+
+    annotations.forEach(data => {
+    // 縦書きか横書きかを判定する命令									
+    const writingMode = data.vertical ? 'vertical-rl' : 'horizontal-tb';									
+    									
+    const myIcon = L.divIcon({								
+        className: 'map-label',									
+        html: `<div style="									
+            transform: rotate(${data.rotation}deg); 									
+            font-size: ${data.size || 24}px; 									
+            writing-mode: ${writingMode};									
+            color: red;">${data.text}</div>`									
+    });									
+    									
+    const marker = L.marker(data.latlng, { icon: myIcon });									
+    marker.bindPopup(`<b>${data.text}</b><br>${data.desc}`);									
+    markers.addLayer(marker);									
+});									
+
+    // 切り替え機能
+    function changeMode(mode) {
+        // 一旦全部消す
+        map.removeLayer(layerOriginal);
+        map.removeLayer(layerKaidoku);
+        map.removeLayer(markers);
+
+        if (mode === 1) {
+            layerOriginal.addTo(map);
+        } else if (mode === 2) {
+            layerKaidoku.addTo(map);
+        } else if (mode === 3) {
+            layerOriginal.addTo(map); // 背景は元の地図
+            markers.addTo(map);      // その上に文字を表示
+        }
+    }
+// --- 座標調査用コード（ここから） ---				
+map.on('click', function(e) {				
+    const lat = Math.round(e.latlng.lat);				
+    const lng = Math.round(e.latlng.lng);				
+    alert("この場所の座標は [" + lat + ", " + lng + "] です");				
+    console.log("[" + lat + ", " + lng + "]");				
+});				
+// --- 座標調査用コード（ここまで） ---				
+
+
+
+</script>
+</body>
+</html>
