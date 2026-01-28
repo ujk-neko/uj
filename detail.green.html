@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>詳細・解読モード</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map { height: 100vh; width: 100%; background: #f0f0f0; }
+        .controls { position: absolute; top: 10px; right: 10px; z-index: 1000; background: white; padding: 10px; border-radius: 5px; display: flex; flex-direction: column; gap: 5px; }
+        .back-btn { position: absolute; top: 10px; left: 10px; z-index: 1000; background: #333; color: white; padding: 10px; text-decoration: none; border-radius: 5px; }
+        .map-label { font-weight: bold; font-size: 24px; white-space: nowrap; }
+    #info-panel {				
+        position: absolute;				
+        bottom: 20px;				
+        right: 10px;				
+        z-index: 1000;				
+        background: white;				
+        padding: 15px;				
+        border-radius: 8px;				
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);				
+        width: 250px;				
+        display: none; /* 最初は隠しておく */	
+
+    </style>
+</head>
+<body>
+   			
+
+<a href="index.html" class="back-btn">← 全体に戻る</a>
+
+<div class="controls">
+    <button onclick="changeMode(1)">1. 元の地図（拡大版）</button>
+    <button onclick="changeMode(2)">2. 解読地図（拡大版）</button>
+    <button onclick="changeMode(3)">3. 解析結果と説明（字の向き統一）</button>
+</div>
+<div id="map"></div>
+
+<div id="info-panel">							
+    <div class="panel-title">💡 解読の豆知識</div>							
+    <p style="margin: 0; font-size: 14px;">							
+        部屋名などに「御（おん・ご）」がついていることが多くあります。これは接頭辞（丁寧にする言葉）がついたもので、当時の敬意を表しています。							
+    </p>							
+</div>		
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    const map = L.map('map', { crs: L.CRS.Simple, minZoom: -1 });
+    const bounds = [[0, 0], [1000, 1000]];
+
+    // ① 元の地図【拡大版】
+    const layerOriginal = L.imageOverlay('onarigennkann.big.jpg', bounds);
+    // ② 解読地図【拡大版】
+    const layerKaidoku = L.imageOverlay('onarigennkann.ni.png', bounds);
+
+    // 最初は「元の地図」を表示
+    layerOriginal.addTo(map);
+    map.fitBounds(bounds);
+    //
+    map.setMaxBounds(bounds);
+    // ③ 説明用の文字データ
+    const annotations = [
+        { text: "御唐門", latlng: [763,385], rotation:0 , size:15,vertical:true,desc: "唐破風（からはふ）形の屋根をもつ門。"},
+        { text: "城附武具長屋", latlng: [455,377], rotation:0 , size:15,vertical:true,desc: "縦書き"},
+        { text: "三十九間", latlng: [484,490], rotation:0 , size:15,vertical:true,desc: "39間=約70.902m"}, 
+        { text: "遠侍", latlng: [732,270], rotation:0 , size:15,vertical:true,desc: "中世・近世の武家屋敷で，主殿から離れた中門の近くに位置する，当番の侍の詰め所。外侍。とおさむらい。"},
+        { text: "遠侍", latlng: [820,260], rotation:0 , size:15,vertical:true,desc: "中世・近世の武家屋敷で，主殿から離れた中門の近くに位置する，当番の侍の詰め所。外侍。とおさむらい。"},
+        { text: "御縁側", latlng: [742,323], rotation:0 , size:13,vertical:true,desc: "家の座敷の外側に設けた，細長い板敷きの部分。えん。"},
+        { text: "御座敷", latlng: [603,10], rotation:0 , size:10,vertical:true,desc: "来客に応対するための畳敷きの部屋。客間。また、板敷に対して，畳が敷いてあるお部屋。"},
+        { text: "御次間", latlng: [753,220], rotation:0 , size:11,vertical:true,desc: "【御次の間】主な座敷の隣についている小部屋。"},
+        { text: "御座敷", latlng: [675,166], rotation:0 , size:13,vertical:true,desc: "来客に応対するための畳敷きの部屋。客間。また、板敷に対して，畳が敷いてあるお部屋。"},
+        { text: "御廊下", latlng: [512,30], rotation:0 , size:10,vertical:true,desc: "家の中の部屋をつなぐ細長い通路。"},
+        { text: "御廣間", latlng: [465,173], rotation:0 , size:13,vertical:true,desc: "【御広間】"},
+        { text: "御縁側", latlng: [408,222], rotation:0 , size:15,vertical:true,desc: "家の座敷の外側に設けた，細長い板敷きの部分。えん。"}, 
+        { text: "溜り", latlng: [304,205], rotation:0 , size:15,vertical:true,desc: "縦書き"},
+        { text: "御廊下", latlng: [513,30], rotation:0 , size:10,vertical:true,desc: "家の中の部屋をつなぐ細長い通路。"},
+        { text: "御物置", latlng: [210,135], rotation:0 , size:13,vertical:true,desc: "縦書き"},
+        { text: "御廊下", latlng: [206,202], rotation:0 , size:13,vertical:true,desc: "家の中の部屋をつなぐ細長い通路。" },
+        { text: "御床", latlng: [378,28], rotation:0 , size:12,vertical:true,desc: "縦書き"},
+        { text: "？？？此通櫓ヨリ櫓十三ノ杉五十六本", latlng: [314,852], rotation:11 , size:10,vertical:true,desc: "説明" },       
+        { text: "樫ケヤキ", latlng: [252,754], rotation:12 , size:10,vertical:true,desc: "【樫】ブナ科コナラ属の常緑高木の総称。秋にドングリを結ぶ。材は堅く、細工物などに用いる。　　【欅】ニレ科の落葉大高木。防風林や庭木として栽植する。材は堅く、木目が美しいので、建材・家具材などに用いる。" },       
+
+       
+        { text: "御座敷", latlng: [856,135], rotation:0 , size:12,vertical:false,desc: "来客に応対するための畳敷きの部屋。客間。また、板敷に対して，畳が敷いてあるお部屋。" },
+        { text: "御廊下", latlng: [595,228], rotation:0 , size:12,vertical:false,desc: "家の中の部屋をつなぐ細長い通路。" },
+        { text: "御廊下", latlng: [553,153], rotation:0 , size:10,vertical:false,desc: "家の中の部屋をつなぐ細長い通路。" },
+        { text: "御廊下", latlng: [751,100], rotation:0 , size:12,vertical:false,desc: "家の中の部屋をつなぐ細長い通路。" },
+        { text: "御?廊?下", latlng: [505,76], rotation:0 , size:10,vertical:false,desc: "家の中の部屋をつなぐ細長い通路。" },
+        { text: "御座敷", latlng: [447,73], rotation:0 , size:12,vertical:false,desc: "来客に応対するための畳敷きの部屋。客間。また、板敷に対して，畳が敷いてあるお部屋。" },
+        { text: "御成玄関", latlng: [450,253], rotation:0 , size:15,vertical:false,desc: "説明" },
+        { text: "御廊下？", latlng: [188,22], rotation:0 , size:12,vertical:false,desc: "家の中の部屋をつなぐ細長い通路。" },
+        { text: "城附石火矢入小屋", latlng: [160,573], rotation:0 , size:10,vertical:false,desc: "宇都宮城に備えられている石火矢を収納していた小屋。　石火矢→石・鉄などの塊を発射する,攻城用の弩（おおゆみ）" },
+        { text: "御廊下", latlng: [73,92], rotation:0 , size:13,vertical:false,desc: "家の中の部屋をつなぐ細長い通路。" },
+        { text: "同断", latlng: [840,336], rotation:0 , size:15,vertical:true,desc: "前に述べたものと同じである様子。『宇都宮城本丸将軍家御泊城ノ節建物ノ図』と共通する部分が多い『宇都宮城本丸・二の丸御殿図』には「御縁側」と記されている。" },
+        { text: "空地", latlng: [305,43], rotation:0 , size:10,vertical:false,desc: "説明" },
+        { text: "御上段", latlng: [362,70], rotation:0 , size:12,vertical:false,desc: "説明" },
+        { text: "御納戸", latlng: [71,10], rotation:0 , size:13,vertical:false,desc: "説明" }//[下→上,左→右]
+
+            ];
+
+    const markers = L.layerGroup(); // 文字をまとめて管理するグループ
+
+    annotations.forEach(data => {
+    // 縦書きか横書きかを判定する命令									
+    const writingMode = data.vertical ? 'vertical-rl' : 'horizontal-tb';									
+    									
+    const myIcon = L.divIcon({								
+        className: 'map-label',									
+        html: `<div style="									
+            transform: rotate(${data.rotation}deg); 									
+            font-size: ${data.size || 24}px; 									
+            writing-mode: ${writingMode};									
+            color: red;">${data.text}</div>`									
+    });									
+    									
+    const marker = L.marker(data.latlng, { icon: myIcon });									
+    marker.bindPopup(`<b>${data.text}</b><br>${data.desc}`);									
+    markers.addLayer(marker);									
+});									
+
+    // 切り替え機能
+    function changeMode(mode) {
+        // 一旦全部消す
+        map.removeLayer(layerOriginal);
+        map.removeLayer(layerKaidoku);
+        map.removeLayer(markers);
+
+    // 一旦パネルを隠す
+    document.getElementById('info-panel').style.display = 'none';
+
+    if (mode === 1) {
+        layerOriginal.addTo(map);
+    } else if (mode === 2) {
+        layerKaidoku.addTo(map);
+    } else if (mode === 3) {
+        layerOriginal.addTo(map);
+        markers.addTo(map);
+        // 「3」のときだけパネルを表示する
+        document.getElementById('info-panel').style.display = 'block';
+}
+
+        if (mode === 1) {
+            layerOriginal.addTo(map);
+        } else if (mode === 2) {
+            layerKaidoku.addTo(map);
+        } else if (mode === 3) {
+            layerOriginal.addTo(map); // 背景は元の地図
+            markers.addTo(map);      // その上に文字を表示
+        }
+    }
+// --- 座標調査用コード（ここから） ---				
+map.on('click', function(e) {				
+    const lat = Math.round(e.latlng.lat);				
+    const lng = Math.round(e.latlng.lng);				
+    alert("この場所の座標は [" + lat + ", " + lng + "] です");				
+    console.log("[" + lat + ", " + lng + "]");				
+});				
+// --- 座標調査用コード（ここまで） ---				
+
+
+
+</script>
+</body>
+</html>
