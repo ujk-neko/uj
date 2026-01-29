@@ -58,8 +58,8 @@
     map.setMaxBounds(bounds);
     // ③ 説明用の文字データ
     const annotations = [
-        { text: "御床", latlng: [933,660], rotation:0 , size:13,vertical:true,desc: "縦書き"},
-        { text: "四尺四寸廻り", latlng: [668,474], rotation:50, size:12,vertical:true,desc: "説明" },
+        { text: "御床", latlng: [933,660], rotation:0 , size:13,vertical:true,desc: "寝るために設けるところ。ねどこ。"},
+        { text: "四尺四寸廻り", latlng: [668,474], rotation:50, size:12,vertical:true,desc: "4尺4寸=約" },
         { text: "ナラノキ", latlng: [432,586], rotation:0 , size:12,vertical:true,desc: "【楢】ドングリのなるブナ科の落葉高木。しいたけ栽培の原木や薪炭用に用いられる。" },
         { text: "六十六間", latlng: [777,230], rotation:-15, size:12,vertical:true,desc: "66間=約111.32ｍ" },
         { text: "藤見櫓", latlng: [804,40], rotation:0 , size:15,vertical:true,desc: "【富士見櫓】本多正純が城の改修を行った際に建てられた二重二階の櫓。土塁南西部にあり、広さは三間（約5.454ｍ）×四間（約7.272ｍ）。　" },
@@ -72,7 +72,7 @@
         { text: "御次間", latlng: [927,826], rotation:-22 , size:14,vertical:false,desc: "【御次の間】主な座敷の隣についている小部屋。" },
         { text: "三間", latlng: [860,39], rotation:-11 , size:10,vertical:false,desc: "三間＝約7.272ｍ（富士見櫓の広さを表している。）" },
         { text: "モミ", latlng: [416,330], rotation:0 , size:10,vertical:false,desc: "【樅】マツ科の常緑高木。雌雄同株。庭木やクリスマスツリーに利用" },
-        { text: "竹風呂屋〇候古木小屋", latlng: [850,364], rotation:-15 , size:11,vertical:false,desc: "【風呂屋】料金" }
+        { text: "竹風呂屋〇候古木小屋", latlng: [850,364], rotation:-15 , size:11,vertical:false,desc: "【風呂屋】浴室。浴場。" }
 
             ];//[下→上,左→右]
 
@@ -126,16 +126,6 @@
             markers.addTo(map);      // その上に文字を表示
         }
     }
-// --- 座標調査用コード（ここから） ---				
-map.on('click', function(e) {				
-    const lat = Math.round(e.latlng.lat);				
-    const lng = Math.round(e.latlng.lng);				
-    alert("この場所の座標は [" + lat + ", " + lng + "] です");				
-    console.log("[" + lat + ", " + lng + "]");				
-});				
-// --- 座標調査用コード（ここまで） ---				
-
-
 
 </script>
 </body>
