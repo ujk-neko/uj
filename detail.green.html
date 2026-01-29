@@ -60,7 +60,7 @@
     // ③ 説明用の文字データ
     const annotations = [
         { text: "御唐門", latlng: [763,385], rotation:0 , size:15,vertical:true,desc: "唐破風（からはふ）形の屋根をもつ門。"},
-        { text: "城附武具長屋", latlng: [455,377], rotation:0 , size:15,vertical:true,desc: "縦書き"},
+        { text: "城附武具長屋", latlng: [455,377], rotation:0 , size:15,vertical:true,desc: "「勝手向」（台所）や「風呂屋」を解体した時の古木材を収納したと記される長屋風の建物。"},
         { text: "三十九間", latlng: [484,490], rotation:0 , size:15,vertical:true,desc: "39間=約70.902m"}, 
         { text: "遠侍", latlng: [732,270], rotation:0 , size:15,vertical:true,desc: "中世・近世の武家屋敷で，主殿から離れた中門の近くに位置する，当番の侍の詰め所。外侍。とおさむらい。"},
         { text: "遠侍", latlng: [820,260], rotation:0 , size:15,vertical:true,desc: "中世・近世の武家屋敷で，主殿から離れた中門の近くに位置する，当番の侍の詰め所。外侍。とおさむらい。"},
@@ -69,14 +69,14 @@
         { text: "御次間", latlng: [753,220], rotation:0 , size:11,vertical:true,desc: "【御次の間】主な座敷の隣についている小部屋。"},
         { text: "御座敷", latlng: [675,166], rotation:0 , size:13,vertical:true,desc: "来客に応対するための畳敷きの部屋。客間。また、板敷に対して，畳が敷いてあるお部屋。"},
         { text: "御廊下", latlng: [512,30], rotation:0 , size:10,vertical:true,desc: "家の中の部屋をつなぐ細長い通路。"},
-        { text: "御廣間", latlng: [465,173], rotation:0 , size:13,vertical:true,desc: "【御広間】"},
+        { text: "御廣間", latlng: [465,173], rotation:0 , size:13,vertical:true,desc: "【御広間】広い部屋・座敷。"},
         { text: "御縁側", latlng: [408,222], rotation:0 , size:15,vertical:true,desc: "家の座敷の外側に設けた，細長い板敷きの部分。えん。"}, 
-        { text: "溜り", latlng: [304,205], rotation:0 , size:15,vertical:true,desc: "縦書き"},
+        { text: "溜り", latlng: [304,205], rotation:0 , size:15,vertical:true,desc: "人が屯（たむろ）している場所。"},
         { text: "御廊下", latlng: [513,30], rotation:0 , size:10,vertical:true,desc: "家の中の部屋をつなぐ細長い通路。"},
-        { text: "御物置", latlng: [210,135], rotation:0 , size:13,vertical:true,desc: "縦書き"},
+        { text: "御物置", latlng: [210,135], rotation:0 , size:13,vertical:true,desc: "当面使わない物や雑具などを入れて置く場所。"},
         { text: "御廊下", latlng: [206,202], rotation:0 , size:13,vertical:true,desc: "家の中の部屋をつなぐ細長い通路。" },
-        { text: "御床", latlng: [378,28], rotation:0 , size:12,vertical:true,desc: "縦書き"},
-        { text: "？？？此通櫓ヨリ櫓十三ノ杉五十六本", latlng: [314,852], rotation:11 , size:10,vertical:true,desc: "説明" },       
+        { text: "御床", latlng: [378,28], rotation:0 , size:12,vertical:true,desc: "寝るために設けるところ。ねどこ。"},
+        { text: "此通櫓ヨリ櫓十三ノ杉五十六本", latlng: [314,852], rotation:11 , size:10,vertical:true,desc: "櫓から櫓までのおこの通りに13種の杉が56本生えている？" },       
         { text: "樫ケヤキ", latlng: [252,754], rotation:12 , size:10,vertical:true,desc: "【樫】ブナ科コナラ属の常緑高木の総称。秋にドングリを結ぶ。材は堅く、細工物などに用いる。　　【欅】ニレ科の落葉大高木。防風林や庭木として栽植する。材は堅く、木目が美しいので、建材・家具材などに用いる。" },       
 
        
@@ -86,14 +86,14 @@
         { text: "御廊下", latlng: [751,100], rotation:0 , size:12,vertical:false,desc: "家の中の部屋をつなぐ細長い通路。" },
         { text: "御?廊?下", latlng: [505,76], rotation:0 , size:10,vertical:false,desc: "家の中の部屋をつなぐ細長い通路。" },
         { text: "御座敷", latlng: [447,73], rotation:0 , size:12,vertical:false,desc: "来客に応対するための畳敷きの部屋。客間。また、板敷に対して，畳が敷いてあるお部屋。" },
-        { text: "御成玄関", latlng: [450,253], rotation:0 , size:15,vertical:false,desc: "説明" },
+        { text: "御成玄関", latlng: [450,253], rotation:0 , size:15,vertical:false,desc: "【御成門】大名の屋敷や寺院などで、宮家・摂家・将軍などを迎えるときに用いる門。おなりごもん。" },
         { text: "御廊下？", latlng: [188,22], rotation:0 , size:12,vertical:false,desc: "家の中の部屋をつなぐ細長い通路。" },
         { text: "城附石火矢入小屋", latlng: [160,573], rotation:0 , size:10,vertical:false,desc: "宇都宮城に備えられている石火矢を収納していた小屋。　石火矢→石・鉄などの塊を発射する,攻城用の弩（おおゆみ）" },
         { text: "御廊下", latlng: [73,92], rotation:0 , size:13,vertical:false,desc: "家の中の部屋をつなぐ細長い通路。" },
         { text: "同断", latlng: [840,336], rotation:0 , size:15,vertical:true,desc: "前に述べたものと同じである様子。『宇都宮城本丸将軍家御泊城ノ節建物ノ図』と共通する部分が多い『宇都宮城本丸・二の丸御殿図』には「御縁側」と記されている。" },
-        { text: "空地", latlng: [305,43], rotation:0 , size:10,vertical:false,desc: "説明" },
-        { text: "御上段", latlng: [362,70], rotation:0 , size:12,vertical:false,desc: "説明" },
-        { text: "御納戸", latlng: [71,10], rotation:0 , size:13,vertical:false,desc: "説明" }//[下→上,左→右]
+        { text: "空地", latlng: [305,43], rotation:0 , size:10,vertical:false,desc: "あきち。" },
+        { text: "御上段", latlng: [362,70], rotation:0 , size:12,vertical:false,desc: "床を他の部屋より一段高くした部屋。高貴な人の座所とされた。" },
+        { text: "御納戸", latlng: [71,10], rotation:0 , size:13,vertical:false,desc: "なんど。衣類・家財・道具類をしまっておく部屋。屋内の物置部屋。中世以降、寝室にも用いられ寝間（ねま）とも呼ばれる。" }//[下→上,左→右]
 
             ];
 
@@ -147,16 +147,6 @@
             markers.addTo(map);      // その上に文字を表示
         }
     }
-// --- 座標調査用コード（ここから） ---				
-map.on('click', function(e) {				
-    const lat = Math.round(e.latlng.lat);				
-    const lng = Math.round(e.latlng.lng);				
-    alert("この場所の座標は [" + lat + ", " + lng + "] です");				
-    console.log("[" + lat + ", " + lng + "]");				
-});				
-// --- 座標調査用コード（ここまで） ---				
-
-
 
 </script>
 </body>
