@@ -10,14 +10,14 @@
    .warning-note {				
         position: absolute;				
         bottom: 525px;				
-        left: 900px;				
+        left: 500%;				
         z-index: 1000;				
         background: rgba(255, 255, 255, 0.9);				
         padding: 10px;				
         border-radius: 5px;				
         border: 2px solid orange;				
         font-size: 14px;				
-        max-width: 300px;				
+			
     }				
 
 	    </style>
@@ -62,17 +62,7 @@
     area4.on('click', function() {						
         window.location.href = 'detail.yellow.html';		
     });						
-
-	
-// --- 座標調査用コード（ここから） ---				
-map.on('click', function(e) {				
-    const lat = Math.round(e.latlng.lat);				
-    const lng = Math.round(e.latlng.lng);				
-    alert("この場所の座標は [" + lat + ", " + lng + "] です");				
-    console.log("[" + lat + ", " + lng + "]");				
-});				
-// --- 座標調査用コード（ここまで） ---				
-
+			
         </script>
 	</body>
 	</html>
