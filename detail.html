@@ -60,7 +60,7 @@
     const annotations = [
         { text: "八間一尺", latlng: [372,332], rotation:0 , size:10,vertical:true,desc: "8間1尺=約1.818ｍ" },
  　　　 { text: "石垣高弐間", latlng: [448,220], rotation:0 , size:10,vertical:true,desc: "石垣の高さが2間（=約3.636m）" },
-        { text: "二間", latlng: [312,275], rotation:0 , size:10,vertical:false,desc: "2間=約3.636m(辰巳櫓の広さを表している。)" },
+        { text: "二間", latlng: [312,275], rotation:0 , size:10,vertical:false,desc: "2間=約3.636m" },
         { text: "六間", latlng: [331,275], rotation:0 , size:10,vertical:false,desc: "6間=約10.908m" },
         { text: "櫓二間", latlng: [258,830], rotation:0 , size:10,vertical:true,desc: "2間=3.636m（辰巳櫓の広さを表している。）" },
         { text: "辰見櫓", latlng: [176,770], rotation:0 , size:15,vertical:true,desc: "辰巳櫓　辰巳は方角の名前。辰と巳との間→南東" },
@@ -132,17 +132,7 @@
             markers.addTo(map);      // その上に文字を表示
         }
     }
-// --- 座標調査用コード（ここから） ---				
-map.on('click', function(e) {				
-    const lat = Math.round(e.latlng.lat);				
-    const lng = Math.round(e.latlng.lng);				
-    alert("この場所の座標は [" + lat + ", " + lng + "] です");				
-    console.log("[" + lat + ", " + lng + "]");				
-});				
-// --- 座標調査用コード（ここまで） ---				
-
-
-
+	
 </script>
 </body>
 </html>
