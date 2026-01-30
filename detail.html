@@ -119,6 +119,7 @@
     } else if (mode === 3) {
         layerOriginal.addTo(map);
         markers.addTo(map);
+		updateLabelSize();
         // 「3」のときだけパネルを表示する
         document.getElementById('info-panel').style.display = 'block';
 }
@@ -157,7 +158,25 @@ map.on('layeradd', function(e) {
         updateLabelSize();
     }
 });
+// ① サイズを計算して変える「関数」本体
+function updateLabelSize() {
+    const currentZoom = map.getZoom();
+    const scale = Math.pow(1.4, currentZoom); // 1.5だと大きすぎた場合は1.4に調整
 
+    // 画面内のすべてのラベルをループで処理
+    document.querySelectorAll('.label-inner').forEach((label) => {
+        // 元のサイズ（20px）に倍率をかける
+        label.style.fontSize = (20 * scale) + "px";
+    });
+}
+
+// ② 「地図がズームされた時」に①を実行させる命令
+map.on('zoomend', updateLabelSize);
+
+// ③ 「モード3（説明付き）に切り替わった直後」にも①を実行させるための工夫
+// changeMode関数の mode === 3 の中の一番最後に「updateLabelSize();」と1行足すと完璧です
+
+	
 </script>
 </body>
 </html>
