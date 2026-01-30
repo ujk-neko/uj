@@ -132,7 +132,32 @@
             markers.addTo(map);      // その上に文字を表示
         }
     }
-	
+
+	// ズームレベルに合わせて文字サイズを調整する関数
+function updateLabelSize() {
+    const currentZoom = map.getZoom();
+    // 基準となるズームレベル（例: 0）の時のサイズを1倍とします
+    // ズームするごとにサイズを計算（1.5の(ズーム差)乗などで調整）
+    const scale = Math.pow(1.5, currentZoom); 
+
+    const labels = document.querySelectorAll('.label-inner');
+    labels.forEach((label, index) => {
+        // annotationsデータから元のサイズを取得（なければ20pxとする）
+        const baseSize = annotations[index].size || 20;
+        label.style.fontSize = (baseSize * scale) + 'px';
+    });
+}
+
+// 地図がズームされた時にこの関数を実行する設定
+map.on('zoomend', updateLabelSize);
+
+// 最初に表示した時にも一度実行してサイズを合わせる
+map.on('layeradd', function(e) {
+    if (e.layer === markers) {
+        updateLabelSize();
+    }
+});
+
 </script>
 </body>
 </html>
