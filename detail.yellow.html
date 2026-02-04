@@ -9,6 +9,18 @@
         .controls { position: absolute; top: 10px; right: 10px; z-index: 1000; background: white; padding: 10px; border-radius: 5px; display: flex; flex-direction: column; gap: 5px; }
         .back-btn { position: absolute; top: 10px; left: 10px; z-index: 1000; background: #333; color: white; padding: 10px; text-decoration: none; border-radius: 5px; }
         .map-label { font-weight: bold; font-size: 24px; white-space: nowrap; }
+    #info-panel {				
+        position: absolute;				
+        bottom: 20px;				
+        right: 10px;				
+        z-index: 1000;				
+        background: white;				
+        padding: 15px;				
+        border-radius: 8px;				
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);				
+        width: 250px;				
+        display: none; /* 最初は隠しておく */				
+
     </style>
 </head>
 <body>
@@ -21,6 +33,13 @@
     <button onclick="changeMode(3)">3. 解析結果と説明（字の向き統一）</button>
 </div>
 <div id="map"></div>
+
+<div id="info-panel">							
+    <div class="panel-title">💡 解読の豆知識</div>							
+    <p style="margin: 0; font-size: 14px;">							
+        部屋名などに「御（おん・ご）」がついていることが多くあります。これは接頭辞（丁寧にする言葉）がついたもので、当時の敬意を表しています。							
+    </p>							
+</div>		
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
@@ -39,8 +58,8 @@
     map.setMaxBounds(bounds);
     // ③ 説明用の文字データ
     const annotations = [
-        { text: "御勝手向〇候古木小屋", latlng: [136,314], rotation:0 , size:12,vertical:false,desc: "【勝手向】台所。" },
-        { text: "二間七間", latlng: [834,538], rotation:0 , size:10,vertical:false,desc: "【二間×七間】約3,636ｍ×約12.726ｍ" }
+        { text: "御勝手向〇候古木小屋", latlng: [136,314], rotation:0 , size:15,vertical:false,desc: "【勝手向】台所。" },
+        { text: "二間七間", latlng: [837,538], rotation:0 , size:15,vertical:false,desc: "【二間×七間】約3,636ｍ×約12.726ｍ" }
 
             ];//[下→上,左→右]
 
@@ -71,6 +90,20 @@
         map.removeLayer(layerKaidoku);
         map.removeLayer(markers);
 
+    // 一旦パネルを隠す
+    document.getElementById('info-panel').style.display = 'none';
+
+    if (mode === 1) {
+        layerOriginal.addTo(map);
+    } else if (mode === 2) {
+        layerKaidoku.addTo(map);
+    } else if (mode === 3) {
+        layerOriginal.addTo(map);
+        markers.addTo(map);
+        // 「3」のときだけパネルを表示する
+        document.getElementById('info-panel').style.display = 'block';
+}
+
         if (mode === 1) {
             layerOriginal.addTo(map);
         } else if (mode === 2) {
@@ -80,8 +113,6 @@
             markers.addTo(map);      // その上に文字を表示
         }
     }
-
-
 
 </script>
 </body>
